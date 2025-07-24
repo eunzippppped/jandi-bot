@@ -7,7 +7,7 @@ load_dotenv()
 app = Flask(__name__)
 
 GPTS_LINK = os.environ.get('GPTS_LINK')
-JANDI_GUIDE_URL = os.environ.get('JANDI_GUIDE_URL')
+JANDI_GUIDE_URL = os.environ.get('JANDI_GUIDE_URL') 
 JANDI_HR_URL = os.environ.get('JANDI_HR_URL')
 
 @app.route('/')
@@ -28,27 +28,11 @@ def handle_guide_request():
 ▶ [증명서 신청 챗봇 바로가기]({GPTS_LINK})
             """
 
-        headers = {'Accept': 'application/vnd.tosslab.jandi-v2+json', 'Content-Type': 'application/json'}
-        payload = {"body": response_body, "connectColor": "#FAC11B", "connectInfo": [{"contentType": "text"}]}
-
-        # --- [디버깅 코드 추가] ---
-        print("\n--- 응답 발송 디버깅 시작 ---")
-        print(f"Secrets에서 읽어온 JANDI_GUIDE_URL: {JANDI_GUIDE_URL}")
-
-        if JANDI_GUIDE_URL:
-            try:
-                print("메시지 발송을 시도합니다...")
-                response = requests.post(JANDI_GUIDE_URL, json=payload, headers=headers)
-                print(f"잔디 서버의 응답 코드: {response.status_code}")
-                print(f"잔디 서버의 응답 내용: {response.text}")
-                print("메시지 발송 시도 완료.")
-            except Exception as e:
-                print(f"!!! 메시지 발송 중 에러 발생: {e} !!!")
-        else:
-            print("!!! 오류: JANDI_GUIDE_URL이 Secrets에 설정되지 않았습니다. !!!")
-
-        print("--- 디버깅 끝 ---\n")
-        # --- [디버깅 코드 끝] ---
+        # [수정된 부분] responseUrl 방식에서는 connectInfo가 필요 없으므로 삭제합니다.
+        response_url = data.get('responseUrl')
+        if response_url:
+            response_data = {"text": response_body}
+            requests.post(response_url, json=response_data)
 
     return jsonify(success=True)
 
