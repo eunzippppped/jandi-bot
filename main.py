@@ -28,7 +28,12 @@ def handle_guide_request():
 ▶ [증명서 신청 챗봇 바로가기]({GPTS_LINK})
             """
         headers = {'Accept': 'application/vnd.tosslab.jandi-v2+json', 'Content-Type': 'application/json'}
-        payload = {"body": response_body, "connectColor": "#FAC11B"}
+        payload = {
+            "body": response_body,
+            "connectColor": "#FAC11B",
+            "connectInfo": [{"contentType": "text"}] # ★★★ 이 줄이 미리보기를 없애줍니다.
+        }
+        
         if JANDI_GUIDE_URL:
             requests.post(JANDI_GUIDE_URL, json=payload, headers=headers)
     return jsonify(success=True)
