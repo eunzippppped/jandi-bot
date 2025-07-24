@@ -27,13 +27,10 @@ def handle_guide_request():
 
 ▶ [증명서 신청 챗봇 바로가기]({GPTS_LINK})
             """
-
-        # [수정된 부분] responseUrl 방식에서는 connectInfo가 필요 없으므로 삭제합니다.
-        response_url = data.get('responseUrl')
-        if response_url:
-            response_data = {"text": response_body}
-            requests.post(response_url, json=response_data)
-
+        headers = {'Accept': 'application/vnd.tosslab.jandi-v2+json', 'Content-Type': 'application/json'}
+        payload = {"body": response_body, "connectColor": "#FAC11B"}
+        if JANDI_GUIDE_URL:
+            requests.post(JANDI_GUIDE_URL, json=payload, headers=headers)
     return jsonify(success=True)
 
 @app.route('/forward-to-jandi', methods=['POST'])
